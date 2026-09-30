@@ -166,8 +166,11 @@ Complete the labs in this order:
 
 1. **Lab: Getting Started with Docker**
 2. **Lab: Docker Compose Quickstart**
+3. **Lab: Building Container Images**
+4. **Lab: Container-Supported Development**
+5. **Lab: The Containerized SDLC**
 
-Both labs use `http://localhost:3030` and the Compose project name `labspace`. Stop the current lab before starting the next one.
+Labs 1-4 use `http://localhost:3030`. Lab 5 uses `http://dockerlabs.xyz`. All labs use the Compose project name `labspace`. Stop the current lab before starting the next one.
 
 ### Lab 1: Getting Started with Docker
 
@@ -235,6 +238,111 @@ When finished, stop and remove the lab containers:
 docker compose -p labspace -f oci://dockersamples/labspace-compose-quickstart down
 ```
 
+### Lab 3: Building Container Images
+
+This lab covers image layers, build caching, `.dockerignore`, non-root users, multi-stage builds, base images, and build secrets.
+
+Lab instructions:  
+https://docs.docker.com/guides/lab-building-images/
+
+Start the lab environment:
+
+```console
+docker compose -p labspace -f oci://dockersamples/labspace-building-images up -d
+```
+
+Check that the containers are running:
+
+```console
+docker ps
+```
+
+Open:
+
+http://localhost:3030
+
+If the page does not open after approximately 30 seconds, inspect the container output:
+
+```console
+docker compose -p labspace -f oci://dockersamples/labspace-building-images logs --tail 50
+```
+
+When finished, stop and remove the lab containers:
+
+```console
+docker compose -p labspace -f oci://dockersamples/labspace-building-images down
+```
+
+### Lab 4: Container-Supported Development
+
+This lab covers running PostgreSQL in a container, bind mounts, Compose configuration, and a pgAdmin container for database inspection.
+
+Lab instructions:  
+https://docs.docker.com/guides/lab-container-supported-development/
+
+Start the lab environment:
+
+```console
+docker compose -p labspace -f oci://dockersamples/labspace-container-supported-development up -d
+```
+
+Check that the containers are running:
+
+```console
+docker ps
+```
+
+Open:
+
+http://localhost:3030
+
+If the page does not open after approximately 30 seconds, inspect the container output:
+
+```console
+docker compose -p labspace -f oci://dockersamples/labspace-container-supported-development logs --tail 50
+```
+
+When finished, stop and remove the lab containers:
+
+```console
+docker compose -p labspace -f oci://dockersamples/labspace-container-supported-development down
+```
+
+### Lab 5: The Containerized SDLC
+
+This lab covers Compose-based development, Testcontainers integration tests, a CI/CD pipeline, and deployment to a Kubernetes cluster.
+
+Lab instructions:  
+https://docs.docker.com/guides/lab-containerized-sdlc/
+
+Start the lab environment:
+
+```console
+docker compose -p labspace -f oci://dockersamples/labspace-containerized-sdlc up -d
+```
+
+Check that the containers are running:
+
+```console
+docker ps
+```
+
+Open:
+
+http://dockerlabs.xyz
+
+If the page does not open after approximately 30 seconds, inspect the container output:
+
+```console
+docker compose -p labspace -f oci://dockersamples/labspace-containerized-sdlc logs --tail 50
+```
+
+When finished, stop and remove the lab containers:
+
+```console
+docker compose -p labspace -f oci://dockersamples/labspace-containerized-sdlc down
+```
+
 ## Common problems
 
 ### `docker` is not recognized or not found
@@ -276,3 +384,6 @@ If another container is using port `3030`, stop the lab or container that is usi
 - Install Docker Compose: https://docs.docker.com/compose/install/
 - Lab: Getting Started with Docker: https://docs.docker.com/guides/lab-container-getting-started/
 - Lab: Docker Compose Quickstart: https://docs.docker.com/guides/lab-compose-quickstart/
+- Lab: Building Container Images: https://docs.docker.com/guides/lab-building-images/
+- Lab: Container-Supported Development: https://docs.docker.com/guides/lab-container-supported-development/
+- Lab: The Containerized SDLC: https://docs.docker.com/guides/lab-containerized-sdlc/
