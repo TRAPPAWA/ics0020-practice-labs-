@@ -1,0 +1,75 @@
+name: fluentd-lab
+
+services:
+  fluentd:
+    image: fluent/fluentd:v1.19.3-debian-2.2
+    user: "0:0"  # Lab simplification; see security note in the handouts.
+    command: ["fluentd", "-c", "/fluentd/etc/fluent.conf"]
+    volumes:
+      - ./fluentd/conf/fluent.conf:/fluentd/etc/fluent.conf:ro
+      - app_logs:/var/log/lab:ro
+      - fluent_state:/fluentd/state
+      - fluent_buffer:/fluentd/buffer
+      - fluent_output:/fluentd/output
+    ports:
+      - "9880:9880"      # Fluentd HTTP input
+      - "24224:24224"    # Fluent forward protocol / Docker logging driver
+      - "24220:24220"    # monitor_agent
+      - "5514:5140/udp"  # syslog lab (host 5514 -> container 5140)
+    networks: [labnet]
+
+  app:
+    build:
+      context: ./app
+    environment:
+      APP_LOG_FILE: /var/log/lab/app.jsonl
+      APP_PORT: "8080"
+    volumes:
+      - app_logs:/var/log/lab
+    ports:
+      - "8080:8080"
+    networks: [labnet]
+
+  sink:
+    build:
+      context: ./sink
+    environment:
+      SINK_FILE: /data/received.jsonl
+      SINK_PORT: "9000"
+    volumes:
+      - sink_data:/data
+    ports:
+      - "9000:9000"
+    networks: [labnet]
+
+  toolbox:
+    build:
+      context: ./tools
+    profiles: ["tools"]
+    networks: [labnet]
+
+  docker-logger:
+    build:
+      context: ./app
+    command: ["python", "-u", "/app/docker_logger.py", "--interval", "1"]
+    profiles: ["dockerlog"]
+    depends_on:
+      - fluentd
+    logging:
+      driver: fluentd
+      options:
+        fluentd-address: "127.0.0.1:24224"
+        fluentd-async: "true"
+        fluentd-sub-second-precision: "true"
+        tag: "docker.lablogger"
+    networks: [labnet]
+
+networks:
+  labnet:
+
+volumes:
+  app_logs:
+  fluent_state:
+  fluent_buffer:
+  fluent_output:
+  sink_data:
