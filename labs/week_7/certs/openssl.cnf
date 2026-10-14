@@ -1,0 +1,18 @@
+[req]
+distinguished_name = dn
+prompt = no
+
+[dn]
+CN = syslog-ng
+O = Logging Lab
+
+[v3_server]
+subjectAltName = @alt_names
+keyUsage = critical, digitalSignature, keyEncipherment
+extendedKeyUsage = serverAuth
+basicConstraints = critical, CA:FALSE
+
+[alt_names]
+DNS.1 = syslog-ng
+DNS.2 = localhost
+IP.1 = 127.0.0.1
