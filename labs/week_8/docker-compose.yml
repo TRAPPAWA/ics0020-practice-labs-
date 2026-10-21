@@ -1,0 +1,72 @@
+services:
+  reference-agent:
+    build:
+      context: ./docker/agent
+    hostname: reference-agent
+    volumes:
+      - ./config/reference-agent/snmpd.conf:/etc/snmp/snmpd.conf:ro
+      - reference_state:/var/lib/snmp
+    networks: [lab]
+
+  secure-agent:
+    build:
+      context: ./docker/agent
+    hostname: secure-agent
+    environment:
+      SNMPV3_USER: labuser
+      SNMPV3_AUTH_PASS: LabAuthPass123!
+      SNMPV3_PRIV_PASS: LabPrivPass123!
+    volumes:
+      - ./config/secure-agent/snmpd.conf:/etc/snmp/snmpd.conf:ro
+      - secure_state:/var/lib/snmp
+    networks: [lab]
+
+  student-agent:
+    build:
+      context: ./docker/agent
+    hostname: student-agent
+    volumes:
+      - ./config/student-agent/snmpd.conf:/etc/snmp/snmpd.conf:ro
+      - student_state:/var/lib/snmp
+    networks: [lab]
+
+  manager:
+    build:
+      context: ./docker/toolbox
+    hostname: manager
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    volumes:
+      - ./work:/work
+    networks: [lab]
+
+  trap-receiver:
+    build:
+      context: ./docker/toolbox
+    hostname: trap-receiver
+    volumes:
+      - ./config/trap-receiver/snmptrapd.conf:/etc/snmp/snmptrapd.conf:ro
+      - ./output/traps:/output
+    command:
+      - bash
+      - -lc
+      - >-
+        set -o pipefail;
+        snmptrapd -f -Lo -C -c /etc/snmp/snmptrapd.conf udp:162 2>&1 |
+        tee -a /output/traps.log
+    networks: [lab]
+
+  traffic:
+    build:
+      context: ./docker/traffic
+    networks: [lab]
+
+networks:
+  lab:
+    driver: bridge
+
+volumes:
+  reference_state:
+  secure_state:
+  student_state:
