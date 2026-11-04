@@ -1,0 +1,100 @@
+services:
+  observed-host:
+    build:
+      context: ./docker/observed-host
+    hostname: observed-host
+    ports:
+      - "8088:8080"
+    networks:
+      lab:
+        ipv4_address: 10.77.0.20
+
+  client-normal:
+    build:
+      context: ./docker/toolbox
+    hostname: client-normal
+    command: ["sleep", "infinity"]
+    volumes:
+      - ./traffic:/lab/traffic:ro
+    networks:
+      lab:
+        ipv4_address: 10.77.0.11
+
+  client-bulk:
+    build:
+      context: ./docker/toolbox
+    hostname: client-bulk
+    command: ["sleep", "infinity"]
+    volumes:
+      - ./traffic:/lab/traffic:ro
+    networks:
+      lab:
+        ipv4_address: 10.77.0.12
+
+  client-scan:
+    build:
+      context: ./docker/toolbox
+    hostname: client-scan
+    command: ["sleep", "infinity"]
+    volumes:
+      - ./traffic:/lab/traffic:ro
+    networks:
+      lab:
+        ipv4_address: 10.77.0.13
+
+  flow-collector:
+    build:
+      context: ./docker/toolbox
+    hostname: flow-collector
+    command:
+      - nfcapd
+      - -w
+      - /flows
+      - -p
+      - "2055"
+      - -t
+      - "10"
+      - -z=lz4
+      - -I
+      - docker-lab
+    volumes:
+      - ./output/flows:/flows
+    networks:
+      lab:
+        ipv4_address: 10.77.0.30
+
+  sensor:
+    build:
+      context: ./docker/toolbox
+    command: ["sleep", "infinity"]
+    network_mode: "service:observed-host"
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    volumes:
+      - ./output/pcap:/captures
+      - ./work:/work
+    depends_on:
+      - observed-host
+      - flow-collector
+
+  analyzer:
+    build:
+      context: ./docker/toolbox
+    hostname: analyzer
+    command: ["sleep", "infinity"]
+    volumes:
+      - ./output/pcap:/captures:ro
+      - ./output/flows:/flows:ro
+      - ./work:/work
+    networks:
+      lab:
+        ipv4_address: 10.77.0.40
+
+networks:
+  lab:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.77.0.0/24
+          gateway: 10.77.0.1
