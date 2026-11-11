@@ -1,0 +1,10 @@
+services:
+  analyzer:
+    build:
+      context: ./docker/analyzer
+    command: ["sleep", "infinity"]
+    network_mode: "none"
+    volumes:
+      - ./evidence:/evidence:ro
+      - ./work:/work
+      - ./tools:/opt/lab/tools:ro
