@@ -1,0 +1,11 @@
+services:
+  analyst:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    command: ["sleep", "infinity"]
+    network_mode: "none"
+    volumes:
+      - ./data:/data:ro
+      - ./work:/work
+      - ./reports:/reports

@@ -1,0 +1,39 @@
+{
+  "dataset": "ICS0020 statistical analysis and reporting lab",
+  "timezone": "UTC",
+  "baseline_start": "2026-10-01T00:00:00Z",
+  "baseline_end": "2026-10-28T23:00:00Z",
+  "evaluation_date": "2026-10-29",
+  "business_hours": {
+    "weekdays": "08:00-18:00 UTC"
+  },
+  "known_schedules": [
+    {
+      "system": "backup-01",
+      "schedule": "Sunday 02:00 UTC",
+      "description": "approved weekly off-site backup"
+    },
+    {
+      "system": "batch-01",
+      "schedule": "daily 01:00 UTC",
+      "description": "approved batch export"
+    },
+    {
+      "system": "ssh-bastion",
+      "schedule": "Sunday 01:00 UTC",
+      "description": "approved maintenance authentication churn"
+    }
+  ],
+  "pipeline_expectations": {
+    "sources": [
+      "fw-edge-01",
+      "dc-01-security",
+      "edr-collector",
+      "web-01-nginx"
+    ],
+    "expected_interval": "hourly",
+    "max_ingestion_lag_s": 300,
+    "max_unparsed_pct": 1.0,
+    "max_clock_skew_s": 60
+  }
+}

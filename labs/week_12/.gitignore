@@ -1,0 +1,7 @@
+reports/*
+!reports/.gitkeep
+work/*.csv
+work/*.svg
+__pycache__/
+*.pyc
+.DS_Store
