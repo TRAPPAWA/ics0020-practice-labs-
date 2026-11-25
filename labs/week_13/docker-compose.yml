@@ -1,0 +1,40 @@
+name: ics0020-search-lab
+services:
+  search:
+    image: opensearchproject/opensearch:2.19.4
+    environment:
+      discovery.type: "single-node"
+      cluster.name: "ics0020-lab"
+      node.name: "search"
+      OPENSEARCH_JAVA_OPTS: "-Xms768m -Xmx768m"
+      DISABLE_INSTALL_DEMO_CONFIG: "true"
+      DISABLE_SECURITY_PLUGIN: "true"
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    ports:
+      - "127.0.0.1:19200:9200"
+    volumes:
+      - search-data:/usr/share/opensearch/data
+  dashboards:
+    image: opensearchproject/opensearch-dashboards:2.19.4
+    environment:
+      OPENSEARCH_HOSTS: '["http://search:9200"]'
+      DISABLE_SECURITY_DASHBOARDS_PLUGIN: "true"
+    ports:
+      - "127.0.0.1:15601:5601"
+    depends_on:
+      - search
+  tools:
+    image: python:3.12.12-slim
+    profiles: ["tools"]
+    working_dir: /lab
+    volumes:
+      - ./:/lab:ro
+    environment:
+      SEARCH_URL: "http://search:9200"
+      PYTHONDONTWRITEBYTECODE: "1"
+    entrypoint: ["python"]
+volumes:
+  search-data:

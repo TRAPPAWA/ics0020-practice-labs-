@@ -1,0 +1,73 @@
+{
+  "size": 0,
+  "track_total_hits": true,
+  "query": {
+    "bool": {
+      "filter": [
+        {
+          "range": {
+            "@timestamp": {
+              "gte": "2026-11-24T09:00:00Z",
+              "lt": "2026-11-24T12:00:00Z"
+            }
+          }
+        },
+        {
+          "term": {
+            "event_type": "web"
+          }
+        },
+        {
+          "term": {
+            "traffic": "TODO"
+          }
+        },
+        {
+          "term": {
+            "service": "TODO"
+          }
+        },
+        {
+          "term": {
+            "route": "TODO"
+          }
+        }
+      ]
+    }
+  },
+  "aggs": {
+    "by_service": {
+      "terms": {
+        "field": "service",
+        "size": 20
+      },
+      "aggs": {
+        "by_route": {
+          "terms": {
+            "field": "route",
+            "size": 20
+          },
+          "aggs": {
+            "windows": {
+              "date_histogram": {
+                "field": "@timestamp",
+                "fixed_interval": "15m",
+                "min_doc_count": 1,
+                "time_zone": "UTC"
+              },
+              "aggs": {
+                "errors": {
+                  "filter": {
+                    "term": {
+                      "status_class": "5xx"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

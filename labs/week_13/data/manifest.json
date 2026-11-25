@@ -1,0 +1,15 @@
+{
+  "files": {
+    "initial.ndjson": {
+      "sha256": "a902167e45f9c8dded9c9f924431867dcd5052befa88a2f5dad273374252d5ee",
+      "events": 2002
+    },
+    "validation.ndjson": {
+      "sha256": "befd17a31c840a4afda554e3dcf9dd9dff5b55bd9f34b7eb5d1e63d4f8cf1273",
+      "events": 661
+    },
+    "mapping.json": {
+      "sha256": "4ce7513be01a51573eaef533bd624d0f1cea1ef799bd65407a6dafa8e54f48d5"
+    }
+  }
+}

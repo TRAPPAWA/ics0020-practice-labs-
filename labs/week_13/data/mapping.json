@@ -1,0 +1,69 @@
+{
+  "mappings": {
+    "dynamic": "strict",
+    "properties": {
+      "@timestamp": {
+        "type": "date"
+      },
+      "action": {
+        "type": "keyword"
+      },
+      "batch": {
+        "type": "keyword"
+      },
+      "change_id": {
+        "type": "keyword"
+      },
+      "component": {
+        "type": "keyword"
+      },
+      "event_id": {
+        "type": "keyword"
+      },
+      "event_type": {
+        "type": "keyword"
+      },
+      "latency_ms": {
+        "coerce": false,
+        "type": "long"
+      },
+      "level": {
+        "type": "keyword"
+      },
+      "message": {
+        "fields": {
+          "raw": {
+            "type": "keyword"
+          }
+        },
+        "type": "text"
+      },
+      "request_id": {
+        "type": "keyword"
+      },
+      "route": {
+        "type": "keyword"
+      },
+      "service": {
+        "type": "keyword"
+      },
+      "status_class": {
+        "type": "keyword"
+      },
+      "status_code": {
+        "coerce": false,
+        "type": "integer"
+      },
+      "tenant": {
+        "type": "keyword"
+      },
+      "traffic": {
+        "type": "keyword"
+      }
+    }
+  },
+  "settings": {
+    "number_of_replicas": 0,
+    "number_of_shards": 1
+  }
+}
